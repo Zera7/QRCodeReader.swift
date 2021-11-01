@@ -44,6 +44,8 @@ public class QRCodeReaderViewController: UIViewController {
   /// The completion blocak that will be called when a result is found.
   public var completionBlock: ((QRCodeReaderResult?) -> Void)?
 
+  public var errorBlock: (() -> Void)?
+
   deinit {
     codeReader.stopScanning()
 
@@ -81,6 +83,7 @@ public class QRCodeReaderViewController: UIViewController {
     }
 
     setupUIComponentsWithCancelButtonTitle(builder.cancelButtonTitle)
+    builder.readerView.displayable.setErrorHandler(errorBlock)
   }
 
   required public init?(coder aDecoder: NSCoder) {

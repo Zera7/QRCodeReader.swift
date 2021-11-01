@@ -30,6 +30,7 @@ import AVFoundation
 protocol QRCodeReaderLifeCycleDelegate: class {
   func readerDidStartScanning()
   func readerDidStopScanning()
+  func readerDidThrowError()
 }
 
 /// Reader object base on the `AVCaptureDevice` to read / scan 1D and 2D codes.
@@ -130,7 +131,7 @@ public final class QRCodeReader: NSObject, AVCaptureMetadataOutputObjectsDelegat
 
     super.init()
 
-    sessionQueue.async {
+    DispatchQueue.main.async {
       self.configureDefaultComponents(withCaptureDevicePosition: captureDevicePosition)
     }
   }
@@ -158,6 +159,10 @@ public final class QRCodeReader: NSObject, AVCaptureMetadataOutputObjectsDelegat
     }
 
     // Add metadata output
+    guard session.canAddOutput(metadataOutput) else {
+      lifeCycleDelegate?.readerDidThrowError()
+      return
+    }
     session.addOutput(metadataOutput)
     metadataOutput.setMetadataObjectsDelegate(self, queue: metadataObjectsQueue)
 

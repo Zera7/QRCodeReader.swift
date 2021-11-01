@@ -71,6 +71,7 @@ final public class QRCodeReaderView: UIView, QRCodeReaderDisplayable {
     return ttb
   }()
 
+  private var errorHandler: (() -> Void)?
   private weak var reader: QRCodeReader?
 
   public func setupComponents(with builder: QRCodeReaderViewControllerBuilder) {
@@ -143,6 +144,10 @@ final public class QRCodeReaderView: UIView, QRCodeReaderDisplayable {
     self.overlayView?.setState(.valid)
   }
 
+  @objc public func setErrorHandler(_ handler: (() -> Void)?) {
+    errorHandler = handler
+  }
+
   @objc public func setNeedsUpdateOrientation() {
     setNeedsDisplay()
 
@@ -200,4 +205,8 @@ extension QRCodeReaderView: QRCodeReaderLifeCycleDelegate {
   }
 
   func readerDidStopScanning() {}
+
+  func readerDidThrowError() {
+    errorHandler?()
+  }
 }

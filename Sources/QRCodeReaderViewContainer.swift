@@ -46,6 +46,9 @@ public protocol QRCodeReaderDisplayable {
   /// Notify the receiver to update its orientation.
   func setNeedsUpdateOrientation()
 
+  /// Sets the scanner lifecycle error handler.
+  func setErrorHandler(_ handler: (() -> Void)?)
+
   /**
    Method called by the container to allows you to layout your view properly using the QR code reader builder.
 
