@@ -264,7 +264,10 @@ public final class QRCodeReader: NSObject, AVCaptureMetadataOutputObjectsDelegat
     do {
       try defaultDevice?.lockForConfiguration()
 
-      defaultDevice?.torchMode = defaultDevice?.torchMode == .on ? .off : .on
+        let mode: AVCaptureDevice.TorchMode = enable ? .on : .off
+        if defaultDevice?.isTorchModeSupported(mode) ?? false {
+            defaultDevice?.torchMode = mode
+        }
 
       defaultDevice?.unlockForConfiguration()
     }
